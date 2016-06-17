@@ -42,40 +42,75 @@ def Overlap2(Pattern):
             adjList[Pattern[i]] = tmp
     return adjList
 
-def GenerateAndPrintAdjacencyList(Pattern):
-    adjList = Overlap2(Pattern)
-    for p in Pattern:
-        print p + " : " + str(adjList[p])
+def PathGraph(Text, k):
+    c = Composition(Text,k)
+    p = []
+    l = len(Text)
+    for kmer in c:
+        p.append(kmer[0:k-1])
+    p.append(c[len(c)-1][1:])
+    return p
 
-Pattern = ["000","001","010","011","100","101","110","111"]
-#Pattern = ["00","01","10","11"]
-#Pattern = ["ATGCG", "GCATG", "CATGC", "AGGCA", "GGCAT"]
+def DeBruijn(Text,k):
+    adjList = dict()
+    pg = PathGraph(Text, k)
+    l = len(pg)
+    for i in range(l-1):
+        key = pg[i]
+        if key in adjList:
+            adjList[pg[i]].append(pg[i+1])
+        else:
+            newList = []
+            newList.append(pg[i+1])
+            adjList[pg[i]] = newList
+    return adjList
 
-Pattern = ["0000","0001","0010","0011","0100","0101","0110","0111","1000","1001","1010","1011","1100","1101","1110","1111"]
-
-#GenerateAndPrintAdjacencyList(Pattern)
-
-print(len("0000100110101111000"))
+def PrintAdjList(adjList):
+    first = 0
+    for key in adjList:
+        out = key + " -> "
+        for k in adjList[key]:
+            if not first:
+                out += k
+                first = 1
+            else:
+                out += ", " + k
+        first = 0
+        print out
+'''
+Text = "AAGATTCTCTAAGA"
+k = 4
+adjList = DeBruijn(Text, k)
+PrintAdjList(adjList)
+'''
 
 '''
-Pattern = ["ATGCG", "GCATG", "CATGC", "AGGCA", "GGCAT"]
-
-output = Overlap(Pattern)
-for kmer in output:
-    print kmer
-'''
-
-'''
-inputFile ="dataset_198_9.txt"
+inputFile ="dataset_199_6-2.txt"
 outputFile = "answer.txt"
 
 fOut = open(outputFile, 'w')
 
-Pattern = [line.rstrip('\n') for line in open(inputFile)]
+fIn = open(inputFile, "r")
 
-#fOut.write(GenomePathProblem(Pattern))
-output = Overlap(Pattern)
-for kMer in output:
-    fOut.write(kMer + '\n')
+k = int(fIn.readline())
+Text = str(fIn.readline()).rstrip('\n')
+
+adjList = DeBruijn(Text, k)
+print adjList
+
+first = 0
+for key in adjList:
+    out = key + " -> "
+    for k in adjList[key]:
+        if not first:
+            out += k
+            first = 1
+        else:
+            out += ", " + k
+    first = 0
+    fOut.write(out + '\n')
+
+fIn.close()
 fOut.close()
 '''
+
