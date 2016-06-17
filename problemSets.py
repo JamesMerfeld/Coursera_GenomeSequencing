@@ -22,15 +22,6 @@ def GetSuffix(kMer):
     return kMer[1:]
 
 def Overlap(Pattern):
-    adjList = []
-    l = len(Pattern)
-    for i in range(l):
-        for j in range(l):
-            if GetSuffix(Pattern[i]) == GetPrefix(Pattern[j]):
-                adjList.append(Pattern[i] + " -> " + Pattern[j])
-    return adjList
-
-def Overlap2(Pattern):
     adjList = dict()
     l = len(Pattern)
     for i in range(l):
@@ -65,6 +56,19 @@ def DeBruijn(Text,k):
             adjList[pg[i]] = newList
     return adjList
 
+def DeBruijn(Patterns):
+    adjList = dict()
+    for pattern in Patterns:
+        prefix = GetPrefix(pattern)
+        suffix = GetSuffix(pattern)
+        if prefix not in adjList:
+            newList = []
+            newList.append(suffix)
+            adjList[prefix] = newList
+        else:
+            adjList[prefix].append(suffix)
+    return adjList
+
 def PrintAdjList(adjList):
     first = 0
     for key in adjList:
@@ -77,25 +81,21 @@ def PrintAdjList(adjList):
                 out += ", " + k
         first = 0
         print out
+
 '''
-Text = "AAGATTCTCTAAGA"
-k = 4
-adjList = DeBruijn(Text, k)
-PrintAdjList(adjList)
+Patterns = ["GAGG","CAGG","GGGG","GGGA","CAGG","AGGG","GGAG"]
+PrintAdjList(DeBruijn(Patterns))
 '''
 
 '''
-inputFile ="dataset_199_6-2.txt"
+inputFile ="dataset_200_7-2.txt"
 outputFile = "answer.txt"
 
 fOut = open(outputFile, 'w')
 
-fIn = open(inputFile, "r")
+Patterns = [line.rstrip('\n') for line in open(inputFile)]
 
-k = int(fIn.readline())
-Text = str(fIn.readline()).rstrip('\n')
-
-adjList = DeBruijn(Text, k)
+adjList = DeBruijn(Patterns)
 print adjList
 
 first = 0
@@ -106,11 +106,27 @@ for key in adjList:
             out += k
             first = 1
         else:
-            out += ", " + k
+            out += "," + k
+            #out += ", " + k
     first = 0
     fOut.write(out + '\n')
 
-fIn.close()
 fOut.close()
-'''
 
+inputFile1 ="answer.txt"
+inputFile2 ="answerCorrect.txt"
+
+in1 = [line.rstrip('\n') for line in open(inputFile1)]
+print len(in1)
+in2 = [line.rstrip('\n') for line in open(inputFile2)]
+print len(in2)
+
+
+for line in in1:
+    if line not in in2:
+        print "in1, not in2: " + line
+
+for line in in2:
+    if line not in in1:
+        print "in2, not in1: " + line
+'''
