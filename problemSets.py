@@ -1,4 +1,49 @@
 import myLibs
+import random
+
+def FindEulerianCycle2(adjList):
+    eCycle = ""
+    numEdges = 0
+    startNodes = []
+    for node in adjList:
+        startNodes.append(node)
+        numEdges += len(adjList[node])
+    print startNodes
+    while(True):
+        workingNodes = []
+        for node in startNodes:
+            workingNodes.append(node)
+        while len(workingNodes) > 0:
+            cycle = []
+            visited = []
+            currentNode = workingNodes[random.randint(0, len(workingNodes)-1)]
+            workingNodes.remove(currentNode)
+            while len(visited) < numEdges:
+                #print "Current node: " + str(currentNode)
+                #print "Visited edges: " + str(visited)
+                nextNodes = adjList[currentNode]
+                for node in nextNodes:
+                    key = str(currentNode)+str(node)
+                    if key in visited:
+                        nextNodes.remove(node)
+                if not nextNodes:
+                    print "Dead-end found"
+                    break
+                #print "Possible next nodes: " + str(nextNodes)
+                nextNode = nextNodes[random.randint(0, len(nextNodes)-1)]
+                #print "Next node: " + str(nextNode)
+                visited.append(str(currentNode)+str(nextNode))
+                currentNode = nextNode
+            if len(visited) == numEdges:
+                eCycle = str(visited)
+                break
+        if eCycle:
+            break
+    return eCycle
+
+def FindEulerianCycle(adjList):
+    eCycle = []
+    return eCycle
 
 #Week2, 1-2, Step2 - Code Challenge
 inputFile ="myInput.txt"
@@ -21,6 +66,8 @@ for line in contents:
     for route in routes:
         newRoutes.append(route)
     adjList[node] = newRoutes
-myLibs.PrintAdjList(adjList)
 
 fOut.close()
+
+print(FindEulerianCycle(adjList))
+#myLibs.PrintAdjList(adjList)
