@@ -43,6 +43,29 @@ def FindEulerianCycle2(adjList):
 
 def FindEulerianCycle(adjList):
     eCycle = []
+    startNodes = []
+    edges = []
+    for node in adjList:
+        startNodes.append(node)
+        for n in adjList[node]:
+            edges.append(str(node)+str(n))
+    currentNode = startNodes[random.randint(0, len(startNodes) - 1)]
+    while len(startNodes) > 0:
+        startNodes.remove(currentNode)
+        toVisit = list(edges)
+        while len(toVisit) > 0:
+            nextNodes = []
+            for node in adjList[currentNode]:
+                key = str(currentNode)+str(node)
+                if key in toVisit:
+                    nextNodes.append(key[1])
+            if not nextNodes:
+                print "Dead-end found"
+                currentNode = toVisit[random.randint(0, len(toVisit) - 1)][0]
+                break
+            nextNode = nextNodes[random.randint(0, len(nextNodes) - 1)]
+            currentNode = nextNode
+            toVisit.remove((str(currentNode)+str(nextNode)))
     return eCycle
 
 #Week2, 1-2, Step2 - Code Challenge
