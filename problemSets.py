@@ -44,16 +44,18 @@ def FindEulerianCycle(adjList):
                 print "Eulerian Cycle found: " + str(eCycle)
                 return eCycle;
             else:
+                print "Cycle = " + str(eCycle)
                 print "Next nodes: " + str(nextNodes)
-            break;
+                index = random.randint(0, len(nextNodes) - 1)
+                nextNode = nextNodes[index];
+                print "Next node: " + str(nextNode)
+                break
         else:
             index = random.randint(0,len(nextNodes)-1)
             nextNode = nextNodes[index]
             print "Next node: " + str(nextNode)
             nodes[currentNode].remove(nextNode)
             currentNode = nextNode
-
-    #pick newStart from Cycle
     return eCycle
 
 #Week2, 1-2, Step2 - Code Challenge
